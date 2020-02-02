@@ -37,6 +37,7 @@ const homePage = require("./Routes/Home/Home");
 const topanime = require("./Routes/TopAnime/TopAnime");
 const topmanga = require("./Routes/Mangas/TopManga.js");
 const favorites = require("./Routes/Users/Favorites");
+const animeDetails = require("./Routes/AnimeDetails/AnimeDetails");
 // acce serveur
 app.use("/api", cors());
 
@@ -54,6 +55,7 @@ app.use("/api", userRoutes);
 app.use("/api", loginUser);
 app.use("/api", homePage);
 app.use("/api", favorites);
+app.use("/api", animeDetails);
 app.use("/api", verifytoken, topanime);
 app.use("/api", verifytoken, topmanga);
 // Gestion des pages inexistantes : Toutes les méthodes HTTP (GET, POST, etc.) des pages non trouvées afficheront une erreur 404
