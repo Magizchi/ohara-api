@@ -1,5 +1,5 @@
 const router = require("express").Router();
-
+const jwt = require("jsonwebtoken");
 //Models
 const Users = require("../../Models/User");
 const Token = require("../../Models/Token");
@@ -17,14 +17,21 @@ router.post("/login", async (req, res) => {
 
     //Verify password
     const hashLogin = SHA256(req.body.password + salt).toString(encBase64);
+
     if (hash === hashLogin) {
-      const token = await Token.findOne({ user_id: user._id });
-      res.statusMessage = "Connected";
-      res.status(200).json({ token: token.token });
-      return;
+      const userToken = {
+        user: user.pseudo,
+        id: user._id
+      };
+      //Create token
+      jwt.sign({ userToken }, "secretkey", (err, token) => {
+        res.statusMessage = "Connected";
+        res.json({ token, userToken });
+        return;
+      });
     } else {
       res.statusMessage = "wrong password";
-      res.status(400).end(); //json({ message: "wrong password" });
+      res.status(401).end(); //json({ message: "wrong password" });
       return;
     }
   } else {
