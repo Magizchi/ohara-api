@@ -4,10 +4,10 @@ const fetch = require("node-fetch");
 //...
 
 //Routes save new users
-router.get("/anime/:id", async (req, res, next) => {
+router.get("/top/anime/:id", async (req, res, next) => {
   console.log("id", req.params.id);
 
-  await fetch(`https://api.jikan.moe/v3/anime/${req.params.id}`, {
+  await fetch(`https://api.jikan.moe/v3/anime/${req.params.id}/`, {
     method: "GET"
   })
     .then(data => data.json())
