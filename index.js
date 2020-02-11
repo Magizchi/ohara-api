@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const app = express();
 
-mongoose.connect("mongodb://localhost:27017/MyAnimeList", {
+mongoose.connect(process.env.MONGODB_URI, {
   // Replace update() with updateOne(), updateMany(), or replaceOne()
   // Replace remove() with deleteOne() or deleteMany().
   // Replace count() with countDocuments(), unless you want to count how many documents are in the whole collection (no filter). In the latter case, use estimatedDocumentCount().
