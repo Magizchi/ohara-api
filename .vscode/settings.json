@@ -4,10 +4,12 @@
         "Connexion",
         "Elist",
         "Gestion",
+        "Mangas",
         "Pseudofinder",
         "Serveur",
         "Toutes",
         "afficheront",
+        "animes",
         "contre",
         "erreur",
         "inexistantes",
@@ -15,8 +17,12 @@
         "méthodes",
         "requêtes",
         "reçues",
+        "secretkey",
         "signin",
+        "topanime",
+        "topmanga",
         "trouvées",
+        "verifytoken",
         "vulnérabilités"
     ]
 }

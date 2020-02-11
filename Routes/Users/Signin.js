@@ -1,10 +1,8 @@
 const router = require("express").Router();
-
-//Generate string
 const uid2 = require("uid2");
 
 //Models
-const Token = require("../../Models/Token");
+// const Token = require("../../Models/Token");
 const Users = require("../../Models/User");
 
 //crypts inputs
@@ -24,9 +22,9 @@ router.route("/signin").post(async (req, res, next) => {
     return;
   } else {
     //Generate Token and salt, date
-    const token = uid2(32);
+    // const token = uid2(32);
     const salt = uid2(32);
-    const date = new Date();
+    // const date = new Date();
 
     //Crypts password
     const hash = SHA256(req.body.password + salt).toString(encBase64);
@@ -47,13 +45,6 @@ router.route("/signin").post(async (req, res, next) => {
         res.status(400).end();
         return;
       } else {
-        //Auth info
-        const newToken = new Token({
-          token: token,
-          createAt: date,
-          user_id: saved._id
-        });
-        await newToken.save();
         res.statusMessage = "Success";
         res.status(200).end();
         return;
