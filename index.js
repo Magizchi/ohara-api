@@ -5,7 +5,8 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const app = express();
-
+require("dotenv").config();
+const fetch = require("node-fetch");
 mongoose.connect(process.env.MONGODB_URI, {
   // Replace update() with updateOne(), updateMany(), or replaceOne()
   // Replace remove() with deleteOne() or deleteMany().
@@ -14,7 +15,7 @@ mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
-  useCreateIndex: true
+  useCreateIndex: true,
 });
 
 // Protection contre les vulnérabilités HTTP
@@ -30,10 +31,12 @@ require("dotenv").config();
 // Models init
 // require("./Models/User");
 
+//re ecriture
+const home = require("./Routes/Home");
+
 //Route user
 const userRoutes = require("./Routes/Users/Signin");
 const loginUser = require("./Routes/Users/Login");
-const homePage = require("./Routes/Home/Home");
 const topanime = require("./Routes/TopAnime/TopAnime");
 const topmanga = require("./Routes/Mangas/TopManga.js");
 const favorites = require("./Routes/Users/Favorites");
@@ -42,57 +45,79 @@ const mangaDetails = require("./Routes/Details/MangaDetails/MangaDetails");
 // acce serveur
 app.use("/api", cors());
 
+app.get("/home", async (req, res, next) => {
+  let result = {
+    favorite: [],
+    manga: [],
+    anime: [],
+  };
+
+  await fetch(`https://api.jikan.moe/v3/top/manga`, {
+    method: "GET",
+  })
+    .then((data) => data.json())
+    .then((res) => (result.manga = res.top));
+
+  await fetch(`https://api.jikan.moe/v3/top/anime`, {
+    method: "GET",
+  })
+    .then((data) => data.json())
+    .then((response) => (result.anime = response.top));
+
+  res.status(200).json(result);
+  return;
+});
 //Default path
 app.get("/", async (req, res) => {
   try {
     res.status(200).json({ message: "ok" });
   } catch (error) {
-    res.status(400).json({ error: "jeanmit" });
+    res.status(400).json({ error: "error" });
   }
 });
 
 //prefix cors
 app.use("/api", userRoutes);
 app.use("/api", loginUser);
-app.use("/api", homePage);
+app.use("/api", home);
 app.use("/api", favorites);
 app.use("/api", mangaDetails);
-app.use("/api", verifytoken, topanime);
-app.use("/api", verifytoken, topmanga);
-app.use("/api", verifytoken, animeDetails);
+app.use("/api", topanime);
+app.use("/api", topmanga);
+app.use("/api", animeDetails);
+
 // Gestion des pages inexistantes : Toutes les méthodes HTTP (GET, POST, etc.) des pages non trouvées afficheront une erreur 404
 app.all("*", (req, res) => {
   res.status(404).end();
 });
 
 app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port" ${process.env.PORT}`);
-  // console.log(`Current environment is ${process.env.NODE_ENV}`);
+  console.log(`Current environment is ${process.env.PORT}`);
 });
 
 //Models
 const Users = require("./Models/User");
 // Authorization: Bearer <access_token>
 
-async function verifytoken(req, res, next) {
-  const bearerHeader = req.headers.cookie;
+// async function verifytoken(req, res, next) {
+//   const bearerHeader = req.headers.cookie;
 
-  if (typeof bearerHeader !== "undefined") {
-    let token = "";
-    let decoded = "";
-    //slice(6) delete 'token=' from req.headers.cookie
-    token = req.headers.cookie.slice(6);
-    //decode token with secretkey
-    decoded = jwt.verify(token, "secretkey");
-    //get user id
-    const userID = decoded.userToken.id;
-    const User = await Users.findOne({ _id: userID });
-    if (User) {
-      return next();
-    } else {
-    }
-    next();
-  } else {
-    res.sendStatus(403);
-  }
-}
+//   if (typeof bearerHeader !== "undefined") {
+//     let token = "";
+//     let decoded = "";
+//     //slice(6) delete 'token=' from req.headers.cookie
+//     token = req.headers.cookie.slice(6);
+//     //decode token with secretkey
+//     decoded = jwt.verify(token, "secretkey");
+//     //get user id
+//     const userID = decoded.userToken.id;
+//     const User = await Users.findOne({ _id: userID });
+//     if (User) {
+//       return next();
+//     } else {
+//     }
+//     next();
+//   } else {
+//     res.sendStatus(403);
+//   }
+// }
