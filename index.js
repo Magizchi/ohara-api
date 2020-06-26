@@ -45,28 +45,6 @@ const mangaDetails = require("./Routes/Details/MangaDetails/MangaDetails");
 // acce serveur
 app.use("/api", cors());
 
-app.get("/home", async (req, res, next) => {
-  let result = {
-    favorite: [],
-    manga: [],
-    anime: [],
-  };
-
-  await fetch(`https://api.jikan.moe/v3/top/manga`, {
-    method: "GET",
-  })
-    .then((data) => data.json())
-    .then((res) => (result.manga = res.top));
-
-  await fetch(`https://api.jikan.moe/v3/top/anime`, {
-    method: "GET",
-  })
-    .then((data) => data.json())
-    .then((response) => (result.anime = response.top));
-
-  res.status(200).json(result);
-  return;
-});
 //Default path
 app.get("/", async (req, res) => {
   try {

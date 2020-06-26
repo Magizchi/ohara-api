@@ -25,7 +25,7 @@ router.get("/home", async (req, res, next) => {
     .then((data) => data.json())
     .then((response) => (result.anime = response.top));
 
-  res.status(400).json({ result });
+  res.status(200).json({ result });
   return;
 });
 
